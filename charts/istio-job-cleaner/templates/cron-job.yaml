@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "istio-job-cleaner.fullname" . }}
+  labels:
+    {{- include "istio-job-cleaner.labels" . | nindent 4 }}
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "istio-job-cleaner.serviceAccountName" . }}
+          containers:
+          - name: job-cleaner
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/bash
+            - -c
+            - |
+              function clean_jobs() {
+                for _ in 1 2 3 ; do
+                  echo "Cleaning..."
+                  for JOB in $(kubectl get pods -l job-name -o=jsonpath='{range .items[?(@.status.phase=="Running")]}{"_"}{@.metadata.name}{"_-n_"}{@.metadata.namespace}{"\n"}{end}' --all-namespaces) ; do
+                    JOB=${JOB//_/ }
+                    WAITING_CONTAINERS=$(kubectl get po ${JOB} -o jsonpath='{range .status.containerStatuses[?(@.state.waiting)]}{@.name}{"\n"}{end}' | wc -l)
+                    RUNNING_CONTAINERS=$(kubectl get po ${JOB} -o jsonpath='{range .status.containerStatuses[?(@.state.running)]}{@.name}{"\n"}{end}')
+                    if [[ ${WAITING_CONTAINERS} -gt 0 ]] ; then
+                        echo "waiting containers ${JOB}"
+                    fi
+                    if [[ $(echo "${RUNNING_CONTAINERS}" | wc -l) -gt 0 ]] ; then
+                        if [[ $(echo "${RUNNING_CONTAINERS}" | grep -v "istio-proxy" | wc -l) -eq 0 ]] ; then
+                          ISTIO_HOST=$(kubectl get po ${JOB} -o jsonpath='{.status.podIP}{":15020"}')
+                          echo "Terminating istio for ${JOB}"
+                          kubectl exec -t ${JOB} -c istio-proxy -- curl --max-time 2 -s -f -XPOST http://127.0.0.1:15020/quitquitquit
+                        fi
+                    fi
+                  done
+
+                  echo "Cleaned!"
+                  sleep 20;
+                done
+              }
+              export -f clean_jobs
+              timeout 60 bash -c clean_jobs
+          restartPolicy: OnFailure

@@ -20,3 +20,24 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+
+## Usage
+
+[Helm](https://helm.sh) must be installed to use the charts.  Please refer to
+Helm's [documentation](https://helm.sh/docs) to get started.
+
+Once Helm has been set up correctly, add the repo as follows:
+
+  helm repo add claudiuvintila https://github.com/claudiuvintila/istio-job-cleaner
+
+If you had already added this repo earlier, run `helm repo update` to retrieve
+the latest versions of the packages.  You can then run `helm search repo
+<alias>` to see the charts.
+
+To install the istio-job-cleaner chart:
+
+    helm install istio-job-cleaner claudiuvintila/istio-job-cleaner
+
+To uninstall the chart:
+
+    helm delete istio-job-cleaner

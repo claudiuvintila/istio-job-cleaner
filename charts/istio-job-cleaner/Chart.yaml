@@ -1,6 +1,9 @@
 apiVersion: v2
 name: istio-job-cleaner
 description: A Helm chart to clean up dangling Job pods due to istio side-cart background processes
+maintainers:
+  - name: "Claudiu Vintila"
+    email: "claudiu.vintila -at- gmail.com"
 
 # A chart can be either an 'application' or a 'library' chart.
 #

@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: portainer/kubectl-shell
+  repository: bitnami/kubectl
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+#  tag: "latest" # if missing will use the kubernetes version
 
 nameOverride: ""
 fullnameOverride: ""

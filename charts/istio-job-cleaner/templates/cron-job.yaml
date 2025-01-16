@@ -26,7 +26,7 @@ spec:
                     JOB=${JOB//_/ }
                     WAITING_CONTAINERS=$(kubectl get po ${JOB} -o jsonpath='{range .status.containerStatuses[?(@.state.waiting)]}{@.name}{"\n"}{end}')
                     RUNNING_CONTAINERS=$(kubectl get po ${JOB} -o jsonpath='{range .status.containerStatuses[?(@.state.running)]}{@.name}{"\n"}{end}')
-                    if [[ echo "${WAITING_CONTAINERS}" | wc -l -gt 0 ]] ; then
+                    if [[ $(echo "${WAITING_CONTAINERS}" | wc -l) -gt 0 ]] ; then
                         echo "waiting containers ${JOB}"
                     fi
                     if [[ $(echo "${RUNNING_CONTAINERS}" | wc -l) -gt 0 ]] ; then

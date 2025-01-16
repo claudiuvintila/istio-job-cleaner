@@ -22,7 +22,7 @@ spec:
               function clean_jobs() {
                 for _ in 1 2 3 ; do
                   echo "Cleaning..."
-                  for JOB in $(kubectl get pods -l job-name -o=jsonpath='{range .items[?(@.status.phase=="Running")]}{"_"}{@.metadata.name}{"_-n_"}{@.metadata.namespace}{"\n"}{end}' --all-namespaces) ; do
+                  for JOB in $(kubectl get pods -l job-name -o=jsonpath='{range .items[?(@.status.phase=="Running")]}{"_"}{@.metadata.name}{"_-n_"}{@.metadata.namespace}{"\n"}{end}' --all-namespaces | grep -v 'istio-job-cleaner') ; do
                     JOB=${JOB//_/ }
                     WAITING_CONTAINERS=$(kubectl get po ${JOB} -o jsonpath='{range .status.containerStatuses[?(@.state.waiting)]}{@.name}{"\n"}{end}')
                     RUNNING_CONTAINERS=$(kubectl get po ${JOB} -o jsonpath='{range .status.containerStatuses[?(@.state.running)]}{@.name}{"\n"}{end}')
@@ -39,7 +39,7 @@ spec:
                   done
 
                   echo "Cleaned!"
-                  sleep 20;
+                  sleep 15;
                 done
               }
               export -f clean_jobs

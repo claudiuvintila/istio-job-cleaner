@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   istio-job-cleaner:
   - apiVersion: v2
+    appVersion: 1.0.6
+    created: "2025-04-28T13:01:55.627517465Z"
+    description: A Helm chart to clean up dangling Job pods due to istio side-cart
+      background processes
+    digest: 91404d7d865164af2586492660ee791fcfe9cdef00f5e8642288fdcf4f7b506a
+    maintainers:
+    - email: claudiu.vintila -at- gmail.com
+      name: Claudiu Vintila
+    name: istio-job-cleaner
+    type: application
+    urls:
+    - https://github.com/claudiuvintila/istio-job-cleaner/releases/download/istio-job-cleaner-1.0.6/istio-job-cleaner-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v2
     appVersion: 1.0.5
     created: "2025-04-28T12:46:08.537134611Z"
     description: A Helm chart to clean up dangling Job pods due to istio side-cart
@@ -71,4 +85,4 @@ entries:
     urls:
     - https://github.com/claudiuvintila/istio-job-cleaner/releases/download/istio-job-cleaner-1.0.0/istio-job-cleaner-1.0.0.tgz
     version: 1.0.0
-generated: "2025-04-28T12:46:08.537154067Z"
+generated: "2025-04-28T13:01:55.627555777Z"

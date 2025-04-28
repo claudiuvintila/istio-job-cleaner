@@ -44,4 +44,7 @@ spec:
               }
               export -f clean_jobs
               timeout 60 bash -c clean_jobs
+            {{- with .Values.securityContext  }}
+            securityContext: {{- toYaml . | nindent 14 }}
+            {{- end }}
           restartPolicy: OnFailure

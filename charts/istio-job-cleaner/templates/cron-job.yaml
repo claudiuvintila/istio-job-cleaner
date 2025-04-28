@@ -48,3 +48,5 @@ spec:
             securityContext: {{- toYaml . | nindent 14 }}
             {{- end }}
           restartPolicy: OnFailure
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 3
